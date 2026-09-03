@@ -1,0 +1,9 @@
+# Nunca subir credenciales al repositorio
+CREDENCIALES_PRUEBA.md
+credenciales*
+*.docx
+*.sql
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db

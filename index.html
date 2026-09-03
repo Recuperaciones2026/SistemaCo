@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grupo Finvivir · Plataforma de Recuperación — Prototipo Integral</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..800;1,14..32,400..700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+<div class="topbar">
+  <button class="burger" onclick="const si=document.querySelector('.side');const op=si.classList.toggle('open');const bk=document.getElementById('sideBack');if(bk)bk.style.display=op?'block':'none'">☰</button>
+  <div class="brand">
+    <span class="iso"><i></i><i></i><i></i></span>
+    <div class="brand-word">Grupo Finvivir<small>Plataforma de Recuperación</small></div>
+  </div>
+  <span class="topInfo" id="topInfo"></span>
+  <div class="roleSwitch" id="roleSwitch">
+    <label for="roleSel">Ver como</label>
+    <select id="roleSel" onchange="setRole(this.value)"></select>
+  </div>
+</div>
+
+<div class="wrap" id="appMain">
+  <aside class="side" id="appSide">
+    <div class="u">
+      <div class="nm" id="uNombre"></div>
+      <div class="rl" id="uRol"></div>
+      <div class="sc" id="uAlcance"></div>
+    </div>
+    <nav id="nav"></nav>
+    <div id="sideFoot" style="margin-top:auto;padding:14px 12px 18px;border-top:1px solid rgba(255,255,255,.10)">
+      <button id="btnReportar" onclick="reportarHallazgo()"
+        style="display:none;width:100%;padding:9px;margin-bottom:8px;background:rgba(255,255,255,.08);
+               color:#CFD4E4;border:1px solid rgba(255,255,255,.16);border-radius:9px;
+               font-size:11.5px;font-weight:600;cursor:pointer;text-align:left">
+        💬 Reportar algo de esta pantalla
+      </button>
+      <button onclick="cerrarMiSesion()"
+        style="width:100%;padding:9px;background:transparent;color:#9AA2BC;
+               border:1px solid rgba(255,255,255,.16);border-radius:9px;
+               font-size:11.5px;font-weight:600;cursor:pointer;text-align:left">
+        ⏏ Cerrar sesión
+      </button>
+    </div>
+  </aside>
+  <main class="main" id="main"></main>
+</div>
+
+<div id="sideBack" onclick="document.querySelector('.side').classList.remove('open');this.style.display='none'"
+     style="display:none;position:fixed;inset:0;z-index:54;background:rgba(18,18,36,.45)"></div>
+<div id="bannerSim" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:60;
+     background:#7A2E2E;color:#FFE9E9;padding:7px 14px;font-size:11.5px;font-weight:600;
+     text-align:center;letter-spacing:.2px;box-shadow:0 -2px 10px rgba(0,0,0,.22)">
+  ⚠️ SIMULACIÓN · Datos ficticios · Lo que captures NO se guarda al cerrar o refrescar
+</div>
+<div id="modalHost" style="position:fixed;inset:0;z-index:400;pointer-events:none;"></div>
+<div id="toastHost" role="status" aria-live="polite" aria-atomic="true" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:500;pointer-events:none;"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
