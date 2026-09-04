@@ -1,4 +1,4 @@
-/* Grupo Finvivir · Plataforma de Recuperación — lógica de la aplicación */
+/* Grupo Finvivir · lógica */
 /* ══════════════════════════════════════════════════════════════════
    1. CONFIGURACIÓN / PARÁMETROS DEL SISTEMA
    ══════════════════════════════════════════════════════════════════ */
@@ -101,7 +101,6 @@ const CATALOGOS = {
     'Irrecuperable':    'Baja o nula probabilidad de recuperación tras agotar la gestión.',
     'Demanda':          'Candidata a escalamiento legal por negativa de pago.'
   },
-  CATEGORIA_LIDER: ['Confiable','En observación','Riesgo alto','Nuevo'],
   MOTIVO_NO_PAGO: ['Sin recursos','Enfermedad','Desempleo','Migración','Negativa expresa','No localizado','Fallecimiento','Crisis de negocio','Emergencia familiar','Disputas internas del grupo','Causa desconocida'],
   ETAPAS:         ['Cobranza sana','Mora temprana','Mora administrativa','Recuperación especializada','Tratamiento final','Quebranto'],
 
@@ -202,24 +201,24 @@ const DB = {
   usuarios:[
     // Jerarquía: Ejecutivo → reportaA (Jefatura) → jefaturaReporta (Gerencia) → gerenciaReporta (Director UdeN) → unidadNegocio (País)
     // Ejecutivo: marcas[] y regiones[] definen su cartera asignada
-    {n:'Felipe Ramírez',  c:'felipe.ramirez@finvivir.com', passHash:'3533039341d041af985ecdb42bafdb2d4a59765ca0af4729bd53c68b45636a45',  rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Carmen Vega',  marcas:['Finvivir','Crédito Mujer'],            regiones:['Jalisco','Nayarit'],    estatus:'Activo',   ultimo:'01-sep-2026 08:12', alta:'10-ene-2025', intentosFallidos:0, mfa:true,  passVence:'10-nov-2026', ipUltimo:'187.152.xx.xx', sesionesActivas:1},
-    {n:'Mariana Ríos',    c:'mariana.rios@finvivir.com', passHash:'0985b2e0a3a262b9db335487a01707bbcb04d2b41217ac7d9db4fdcf742b8180',    rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Carmen Vega',  marcas:['Finvivir'],                            regiones:['Jalisco'],              estatus:'Activo',   ultimo:'01-sep-2026 07:58', alta:'15-feb-2025', intentosFallidos:0, mfa:true,  passVence:'15-dic-2026', ipUltimo:'187.152.xx.xx', sesionesActivas:1},
-    {n:'Jorge Núñez',     c:'jorge.nunez@finvivir.com', passHash:'b7e52b0908757141a44e50ed53b6050d78f6004102c190160dcbe020278397b7',     rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Paola Vega',   marcas:['Finvivir','Crédito Semilla','Crédito Mujer'], regiones:['Colima'],              estatus:'Activo',   ultimo:'31-ago-2026 18:40', alta:'03-mar-2025', intentosFallidos:2, mfa:false, passVence:'03-dic-2026', ipUltimo:'201.174.xx.xx', sesionesActivas:0},
-    {n:'Ana López',       c:'ana.lopez@finvivir.com', passHash:'779e18d8ae622a909ddbecb3d074f5ea6a11a411c3259085d0b7a695861a0adf',       rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Carmen Vega',  marcas:['Crédito Mujer','Finvivir'],            regiones:['Jalisco','Nayarit'],              estatus:'Activo',   ultimo:'01-sep-2026 08:30', alta:'05-jun-2025', intentosFallidos:0, mfa:false, passVence:'05-dic-2026', ipUltimo:'187.152.xx.xx', sesionesActivas:1},
-    {n:'Rodrigo Salas',   c:'rodrigo.salas@finvivir.com', passHash:'2ccfe69851a7ca5c2d7f8d9fc08a77ef917b9a68f366b162a977144dd1912345',   rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Carmen Vega',  marcas:['Finvivir','Crédito Mujer'],            regiones:['Nayarit'],              estatus:'Bloqueado',ultimo:'02-ago-2026 11:05', alta:'12-jun-2024', intentosFallidos:5, mfa:false, passVence:'12-sep-2026', ipUltimo:'189.240.xx.xx', sesionesActivas:0, motivoBaja:'Baja temporal por incapacidad médica. Ticket RH-4408.'},
-    {n:'Claudia Bermúdez',c:'claudia.bermudez@finvivir.com', passHash:'88b2e1216504bd1124f8c67055cc8f0281eadcccb9857566aa9bdebc34591b71',rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Carmen Vega',  marcas:['Finvivir','Crédito Negocio'],          regiones:['Jalisco','Nayarit'],    estatus:'Activo',   ultimo:'01-sep-2026 07:45', alta:'08-ago-2025', intentosFallidos:1, mfa:false, passVence:'08-feb-2027', ipUltimo:'187.152.xx.xx', sesionesActivas:1},
-    {n:'Carmen Vega',     c:'carmen.vega@finvivir.com', passHash:'b0feb4cb2b07a5172f3a941e2d87d8ae2317d7d35144a8e0f6ad604b33462e4b',     rol:'Jefatura de Recuperación',              pais:'México',  unidadNegocio:'México',    reportaA:'Laura Méndez', marcas:['Finvivir','Crédito Mujer','Crédito Negocio'], regiones:['Jalisco','Nayarit'], estatus:'Activo',   ultimo:'01-sep-2026 08:45', alta:'05-ene-2023', intentosFallidos:0, mfa:true,  passVence:'05-nov-2026', ipUltimo:'187.152.xx.xx', sesionesActivas:1},
-    {n:'Paola Vega',      c:'paola.vega@finvivir.com', passHash:'4b3659cb282b4a8bdcaef4bd99d689fc217af90fdf8c82c9cf1b792041164c6c',      rol:'Jefatura de Recuperación',              pais:'México',  unidadNegocio:'México',    reportaA:'Laura Méndez', marcas:['Finvivir','Crédito Semilla'],          regiones:['Colima'],              estatus:'Activo',   ultimo:'01-sep-2026 08:00', alta:'10-ene-2023', intentosFallidos:0, mfa:true,  passVence:'10-nov-2026', ipUltimo:'187.152.xx.xx', sesionesActivas:1},
-    {n:'Héctor Lomelí',   c:'hector.lomeli@finvivir.com', passHash:'a6746c6ae8093b0580339976a67de5d66f46ccc576b9a6f01640fee19941184c',   rol:'Jefatura de Recuperación',              pais:'México',  unidadNegocio:'México',    reportaA:'Laura Méndez', marcas:['Finvivir','Crédito Negocio'],          regiones:['Bajío'],               estatus:'Activo',   ultimo:'01-sep-2026 08:20', alta:'12-feb-2023', intentosFallidos:0, mfa:true,  passVence:'12-dic-2026', ipUltimo:'187.152.xx.xx', sesionesActivas:1},
-    {n:'Silvia Cordero',  c:'silvia.cordero@finvivir.com', passHash:'be384058810569b8dfd2fd5bae6dba238f49882ff579a82191ac705f892f837a',  rol:'Jefatura de Recuperación',              pais:'México',  unidadNegocio:'México',    reportaA:'Laura Méndez', marcas:['Finvivir','Crédito Mujer'],            regiones:['Occidente'],           estatus:'Activo',   ultimo:'01-sep-2026 08:35', alta:'20-feb-2023', intentosFallidos:0, mfa:true,  passVence:'20-dic-2026', ipUltimo:'187.152.xx.xx', sesionesActivas:1},
-    {n:'Ignacio Beltrán', c:'ignacio.beltran@finvivir.com', passHash:'5af01e439688d05fd4135b6bfb259812cfc558e451e716da83d3c7361ae08021', rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Héctor Lomelí',marcas:['Finvivir','Crédito Negocio'],          regiones:['Bajío'],               estatus:'Activo',   ultimo:'01-sep-2026 07:50', alta:'05-may-2025', intentosFallidos:0, mfa:false, passVence:'05-ene-2027', ipUltimo:'189.240.xx.xx', sesionesActivas:1},
-    {n:'Verónica Alcalá', c:'veronica.alcala@finvivir.com', passHash:'395c3b7d99d5d5af6a406c38cffd4f0f234c33748bf4d6ef0c545b851921fde6', rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Silvia Cordero',marcas:['Finvivir','Crédito Mujer'],           regiones:['Occidente'],           estatus:'Activo',   ultimo:'01-sep-2026 08:05', alta:'18-jun-2025', intentosFallidos:0, mfa:false, passVence:'18-feb-2027', ipUltimo:'189.240.xx.xx', sesionesActivas:1},
-    {n:'Laura Méndez',    c:'laura.mendez@finvivir.com', passHash:'91a34a861009b0b420ae724c4640cf1ebf87bc7ea9cdf1fdaa276319c10955df',    rol:'Gerencia de Recuperación',              pais:'México',  unidadNegocio:'México',    reportaA:'Roberto Ávila',marcas:[], regiones:['Jalisco','Nayarit','Colima','Bajío','Occidente'], estatus:'Activo',   ultimo:'01-sep-2026 09:20', alta:'01-ene-2023', intentosFallidos:0, mfa:true,  passVence:'01-nov-2026', ipUltimo:'201.174.xx.xx', sesionesActivas:1},
-    {n:'Roberto Ávila',   c:'r.avila@finvivir.com', passHash:'01e66343eb938cada6ce30f3054a44e8c3d4565174a28916dbda7ba41a661c9d',         rol:'Director de Unidad de Negocio',         pais:'México',  unidadNegocio:'México',    reportaA:null,           marcas:[], regiones:[],                          estatus:'Activo',   ultimo:'01-sep-2026 10:00', alta:'01-ene-2023', intentosFallidos:0, mfa:true,  passVence:'01-nov-2026', ipUltimo:'201.174.xx.xx', sesionesActivas:1},
-    {n:'Diana Soto',      c:'diana.soto@finvivir.com', passHash:'feb14ea9ac8804397051c0666c754d82ce2e2b62d14f38fab5d6364967c32a50',      rol:'Jefatura Comercial',                    pais:'México',  unidadNegocio:'México',    reportaA:'Laura Méndez', marcas:['Finvivir','Crédito Mujer'],            regiones:['Jalisco'],              estatus:'Activo',   ultimo:'31-ago-2026 16:11', alta:'20-abr-2024', intentosFallidos:0, mfa:true,  passVence:'20-dic-2026', ipUltimo:'187.152.xx.xx', sesionesActivas:0},
-    {n:'Patricia Morales',c:'p.morales@finvivir.com', passHash:'7d396efd719dc3eff51099aa394624028abfefc45e8c6a42df2823a318f24ae5',       rol:'Especialista de Información y Control', pais:'México',  unidadNegocio:'México',    reportaA:'Laura Méndez', marcas:[], regiones:['Jalisco','Nayarit','Colima'], estatus:'Activo',   ultimo:'01-sep-2026 09:45', alta:'10-mar-2024', intentosFallidos:0, mfa:true,  passVence:'10-dic-2026', ipUltimo:'187.152.xx.xx', sesionesActivas:1},
-    {n:'Sofía Admin',     c:'sofia.admin@finvivir.com', passHash:'db17d04f665c28c46ed2ffe428dc692fd4ef6701eb6e9eaa89132ec49a2486fa',     rol:'Administrador de Seguridad',            pais:'Global',  unidadNegocio:'Global',    reportaA:null,           marcas:[], regiones:[],                          estatus:'Activo',   ultimo:'01-sep-2026 10:30', alta:'01-ene-2023', intentosFallidos:0, mfa:true,  passVence:'01-nov-2026', ipUltimo:'201.174.xx.xx', sesionesActivas:1},
-    {n:'Marco Dev',       c:'marco.dev@finvivir.com', passHash:'bef7ff73664e6dd9bec43447f057891781bd77cb1e0860bf1498499b5fccbb29',       rol:'Administrador de Configuración',        pais:'Global',  unidadNegocio:'Global',    reportaA:null,           marcas:[], regiones:[],                          estatus:'Activo',   ultimo:'01-sep-2026 09:00', alta:'01-ene-2023', intentosFallidos:0, mfa:true,  passVence:'01-nov-2026', ipUltimo:'201.174.xx.xx', sesionesActivas:1},
+    {n:'Felipe Ramírez',  c:'felipe.ramirez@finvivir.com', passHash:'3533039341d041af985ecdb42bafdb2d4a59765ca0af4729bd53c68b45636a45',  rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Carmen Vega',  marcas:['Finvivir','Crédito Mujer'],            regiones:['Jalisco','Nayarit'],    estatus:'Activo',   ultimo:'01-sep-2026 08:12', alta:'10-ene-2025', intentosFallidos:0,  sesionesActivas:1},
+    {n:'Mariana Ríos',    c:'mariana.rios@finvivir.com', passHash:'0985b2e0a3a262b9db335487a01707bbcb04d2b41217ac7d9db4fdcf742b8180',    rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Carmen Vega',  marcas:['Finvivir'],                            regiones:['Jalisco'],              estatus:'Activo',   ultimo:'01-sep-2026 07:58', alta:'15-feb-2025', intentosFallidos:0,  sesionesActivas:1},
+    {n:'Jorge Núñez',     c:'jorge.nunez@finvivir.com', passHash:'b7e52b0908757141a44e50ed53b6050d78f6004102c190160dcbe020278397b7',     rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Paola Vega',   marcas:['Finvivir','Crédito Semilla','Crédito Mujer'], regiones:['Colima'],              estatus:'Activo',   ultimo:'31-ago-2026 18:40', alta:'03-mar-2025', intentosFallidos:2, sesionesActivas:0},
+    {n:'Ana López',       c:'ana.lopez@finvivir.com', passHash:'779e18d8ae622a909ddbecb3d074f5ea6a11a411c3259085d0b7a695861a0adf',       rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Carmen Vega',  marcas:['Crédito Mujer','Finvivir'],            regiones:['Jalisco','Nayarit'],              estatus:'Activo',   ultimo:'01-sep-2026 08:30', alta:'05-jun-2025', intentosFallidos:0, sesionesActivas:1},
+    {n:'Rodrigo Salas',   c:'rodrigo.salas@finvivir.com', passHash:'2ccfe69851a7ca5c2d7f8d9fc08a77ef917b9a68f366b162a977144dd1912345',   rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Carmen Vega',  marcas:['Finvivir','Crédito Mujer'],            regiones:['Nayarit'],              estatus:'Bloqueado',ultimo:'02-ago-2026 11:05', alta:'12-jun-2024', intentosFallidos:5, sesionesActivas:0, motivoBaja:'Baja temporal por incapacidad médica. Ticket RH-4408.'},
+    {n:'Claudia Bermúdez',c:'claudia.bermudez@finvivir.com', passHash:'88b2e1216504bd1124f8c67055cc8f0281eadcccb9857566aa9bdebc34591b71',rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Carmen Vega',  marcas:['Finvivir','Crédito Negocio'],          regiones:['Jalisco','Nayarit'],    estatus:'Activo',   ultimo:'01-sep-2026 07:45', alta:'08-ago-2025', intentosFallidos:1, sesionesActivas:1},
+    {n:'Carmen Vega',     c:'carmen.vega@finvivir.com', passHash:'b0feb4cb2b07a5172f3a941e2d87d8ae2317d7d35144a8e0f6ad604b33462e4b',     rol:'Jefatura de Recuperación',              pais:'México',  unidadNegocio:'México',    reportaA:'Laura Méndez', marcas:['Finvivir','Crédito Mujer','Crédito Negocio'], regiones:['Jalisco','Nayarit'], estatus:'Activo',   ultimo:'01-sep-2026 08:45', alta:'05-ene-2023', intentosFallidos:0,  sesionesActivas:1},
+    {n:'Paola Vega',      c:'paola.vega@finvivir.com', passHash:'4b3659cb282b4a8bdcaef4bd99d689fc217af90fdf8c82c9cf1b792041164c6c',      rol:'Jefatura de Recuperación',              pais:'México',  unidadNegocio:'México',    reportaA:'Laura Méndez', marcas:['Finvivir','Crédito Semilla'],          regiones:['Colima'],              estatus:'Activo',   ultimo:'01-sep-2026 08:00', alta:'10-ene-2023', intentosFallidos:0,  sesionesActivas:1},
+    {n:'Héctor Lomelí',   c:'hector.lomeli@finvivir.com', passHash:'a6746c6ae8093b0580339976a67de5d66f46ccc576b9a6f01640fee19941184c',   rol:'Jefatura de Recuperación',              pais:'México',  unidadNegocio:'México',    reportaA:'Laura Méndez', marcas:['Finvivir','Crédito Negocio'],          regiones:['Bajío'],               estatus:'Activo',   ultimo:'01-sep-2026 08:20', alta:'12-feb-2023', intentosFallidos:0,  sesionesActivas:1},
+    {n:'Silvia Cordero',  c:'silvia.cordero@finvivir.com', passHash:'be384058810569b8dfd2fd5bae6dba238f49882ff579a82191ac705f892f837a',  rol:'Jefatura de Recuperación',              pais:'México',  unidadNegocio:'México',    reportaA:'Laura Méndez', marcas:['Finvivir','Crédito Mujer'],            regiones:['Occidente'],           estatus:'Activo',   ultimo:'01-sep-2026 08:35', alta:'20-feb-2023', intentosFallidos:0,  sesionesActivas:1},
+    {n:'Ignacio Beltrán', c:'ignacio.beltran@finvivir.com', passHash:'5af01e439688d05fd4135b6bfb259812cfc558e451e716da83d3c7361ae08021', rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Héctor Lomelí',marcas:['Finvivir','Crédito Negocio'],          regiones:['Bajío'],               estatus:'Activo',   ultimo:'01-sep-2026 07:50', alta:'05-may-2025', intentosFallidos:0, sesionesActivas:1},
+    {n:'Verónica Alcalá', c:'veronica.alcala@finvivir.com', passHash:'395c3b7d99d5d5af6a406c38cffd4f0f234c33748bf4d6ef0c545b851921fde6', rol:'Ejecutivo de Recuperación',             pais:'México',  unidadNegocio:'México',    reportaA:'Silvia Cordero',marcas:['Finvivir','Crédito Mujer'],           regiones:['Occidente'],           estatus:'Activo',   ultimo:'01-sep-2026 08:05', alta:'18-jun-2025', intentosFallidos:0, sesionesActivas:1},
+    {n:'Laura Méndez',    c:'laura.mendez@finvivir.com', passHash:'91a34a861009b0b420ae724c4640cf1ebf87bc7ea9cdf1fdaa276319c10955df',    rol:'Gerencia de Recuperación',              pais:'México',  unidadNegocio:'México',    reportaA:'Roberto Ávila',marcas:[], regiones:['Jalisco','Nayarit','Colima','Bajío','Occidente'], estatus:'Activo',   ultimo:'01-sep-2026 09:20', alta:'01-ene-2023', intentosFallidos:0,  sesionesActivas:1},
+    {n:'Roberto Ávila',   c:'r.avila@finvivir.com', passHash:'01e66343eb938cada6ce30f3054a44e8c3d4565174a28916dbda7ba41a661c9d',         rol:'Director de Unidad de Negocio',         pais:'México',  unidadNegocio:'México',    reportaA:null,           marcas:[], regiones:[],                          estatus:'Activo',   ultimo:'01-sep-2026 10:00', alta:'01-ene-2023', intentosFallidos:0,  sesionesActivas:1},
+    {n:'Diana Soto',      c:'diana.soto@finvivir.com', passHash:'feb14ea9ac8804397051c0666c754d82ce2e2b62d14f38fab5d6364967c32a50',      rol:'Jefatura Comercial',                    pais:'México',  unidadNegocio:'México',    reportaA:'Laura Méndez', marcas:['Finvivir','Crédito Mujer'],            regiones:['Jalisco'],              estatus:'Activo',   ultimo:'31-ago-2026 16:11', alta:'20-abr-2024', intentosFallidos:0,  sesionesActivas:0},
+    {n:'Patricia Morales',c:'p.morales@finvivir.com', passHash:'7d396efd719dc3eff51099aa394624028abfefc45e8c6a42df2823a318f24ae5',       rol:'Especialista de Información y Control', pais:'México',  unidadNegocio:'México',    reportaA:'Laura Méndez', marcas:[], regiones:['Jalisco','Nayarit','Colima'], estatus:'Activo',   ultimo:'01-sep-2026 09:45', alta:'10-mar-2024', intentosFallidos:0,  sesionesActivas:1},
+    {n:'Sofía Admin',     c:'sofia.admin@finvivir.com', passHash:'db17d04f665c28c46ed2ffe428dc692fd4ef6701eb6e9eaa89132ec49a2486fa',     rol:'Administrador de Seguridad',            pais:'Global',  unidadNegocio:'Global',    reportaA:null,           marcas:[], regiones:[],                          estatus:'Activo',   ultimo:'01-sep-2026 10:30', alta:'01-ene-2023', intentosFallidos:0,  sesionesActivas:1},
+    {n:'Marco Dev',       c:'marco.dev@finvivir.com', passHash:'bef7ff73664e6dd9bec43447f057891781bd77cb1e0860bf1498499b5fccbb29',       rol:'Administrador de Configuración',        pais:'Global',  unidadNegocio:'Global',    reportaA:null,           marcas:[], regiones:[],                          estatus:'Activo',   ultimo:'01-sep-2026 09:00', alta:'01-ene-2023', intentosFallidos:0,  sesionesActivas:1},
   ],
   ejecutivos:[
     {n:'Felipe Ramírez',meta:9000,recuperado:5420,prev:[52,58,61,55,63,60]},
@@ -278,7 +277,7 @@ const DB = {
     {ts:'01-sep-2026 07:12',quien:'Sistema',rol:'Proceso automático',accion:'Alerta de seguridad',detalle:'Jorge Núñez — 2 intentos fallidos de acceso desde IP 201.174.xx.xx',motivo:'Detección automática de intentos fallidos consecutivos.',antes:'0 intentos',despues:'2 intentos'},
     {ts:'31-ago-2026 22:45',quien:'Sistema',rol:'Proceso automático',accion:'Bloqueo de usuario',detalle:'Rodrigo Salas — cuenta bloqueada por inactividad >30 días',motivo:'Política automática de bloqueo por inactividad.',antes:'Activo',despues:'Bloqueado'},
     {ts:'28-ago-2026 10:20',quien:'Sofía Admin',rol:'Administrador de Seguridad',accion:'Alta de usuario',detalle:'Claudia Bermúdez · Ejecutivo de Recuperación · Jalisco, Nayarit',motivo:'Ingreso de nueva ejecutiva según nómina. Ticket RH-4491 aprobado por Carmen Vega el 25-ago-2026.',antes:null,despues:'Activo'},
-    {ts:'15-ago-2026 09:00',quien:'Sofía Admin',rol:'Administrador de Seguridad',accion:'Modificación de usuario',detalle:'Laura Méndez — MFA activado obligatoriamente',motivo:'Activación de MFA conforme a nueva política de seguridad para perfiles gerenciales. Circular DIR-0089.',antes:'Perfil: Gerencia / México / MFA: No',despues:'Perfil: Gerencia / México / MFA: Sí'},
+    {ts:'15-ago-2026 09:00',quien:'Sofía Admin',rol:'Administrador de Seguridad',accion:'Modificación de usuario',detalle:'Laura Méndez — actualización de alcance regional',motivo:'Ampliación de alcance a 3 regiones por reestructura de la gerencia. Circular DIR-0089.',antes:'Regiones: Jalisco',despues:'Regiones: Jalisco, Nayarit, Colima'},
     {ts:'10-ago-2026 14:30',quien:'Sofía Admin',rol:'Administrador de Seguridad',accion:'Cierre de sesión forzado',detalle:'Felipe Ramírez — sesión desde IP desconocida',motivo:'IP de acceso fuera del rango habitual. Se cerró sesión preventivamente y se notificó al usuario.',antes:'1 sesión activa',despues:'0 sesiones'},
     {ts:'05-ago-2026 16:00',quien:'Sofía Admin',rol:'Administrador de Seguridad',accion:'Reseteo de intentos fallidos',detalle:'Jorge Núñez — 3 intentos fallidos reseteados',motivo:'Usuario verificó identidad vía videollamada supervisada. Ticket SEG-1041.',antes:'3 intentos',despues:'0 intentos'},
     {ts:'01-ago-2026 08:30',quien:'Sistema',rol:'Proceso automático',accion:'Alerta de seguridad',detalle:'Acceso desde nueva IP detectado — Roberto Ávila',motivo:'Primer acceso desde 201.174.xx.xx. IP registrada automáticamente.',antes:'IP anterior',despues:'IP actualizada'},
@@ -476,11 +475,12 @@ const fmt   = n => { const m=MONEDA_INFO[P('MONEDA_SISTEMA')]||MONEDA_INFO.MXN; 
 const pct   = n => (n*100).toFixed(1)+'%';
 const fecha = d => `${String(d.getDate()).padStart(2,'0')}-${MESES[d.getMonth()]}-${d.getFullYear()}`;
 const esc   = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-/* Categoría del líder de un grupo: se deriva del historial de FALCO si existe; si el líder
-   nunca ha tenido un FALCO reportado, se clasifica como "Nuevo" (catálogo CATEGORIA_LIDER). */
+/* Punto 5: la categoría es texto libre capturado por el Jefe Comercial al
+   reportar el FALCO. Ya no se deriva del catálogo CATEGORIA_LIDER ni se
+   infiere: si no se capturó, se muestra "Sin categorizar" y no se inventa. */
 const categoriaDeLider = nombreLider => {
   const f = DB.falcos.find(x=>x.lider===nombreLider);
-  return (f && f.categoriaLider) || 'Nuevo';
+  return (f && f.categoriaLider) || 'Sin categorizar';
 };
 /* Traduce el estatus interno de un FALCO a lenguaje natural para pantallas de solo lectura
    (antes se mostraba el código crudo "EN_GESTION"/"RECIBIDO" directamente al usuario). */
@@ -528,7 +528,7 @@ function log(accion,detalle,motivo,antes,despues){
        acción registrada hoy aparecía fechada el 21 de agosto. Ahora usa la fecha del
        sistema (HOY), la misma que rige catorcenas, vencimientos y el reloj de FALCO. */
     ts:`${fecha(HOY)} ${String(new Date().getHours()).padStart(2,'0')}:${String(new Date().getMinutes()).padStart(2,'0')}`,
-    quien:ROLES[currentRole].persona, rol:ROLES[currentRole].label,
+    quien:personaActual(), rol:rolActual(),
     accion, detalle, motivo:motivo||'—', antes:antes==null?'—':String(antes), despues:despues==null?'—':String(despues)
   });
 }
@@ -547,9 +547,23 @@ function menuKeys(rol){ return ROLES[rol].menu.flatMap(g=>g[1]); }
 function setRole(r){
   currentRole=r; const R=ROLES[r];
   document.getElementById('roleSel').value=r;
-  document.getElementById('uNombre').textContent=R.persona;
-  document.getElementById('uRol').textContent=R.label;
-  document.getElementById('uAlcance').textContent=R.alcance;
+  /* Muestra al usuario AUTENTICADO, no la persona de muestra del rol. */
+  const _u=window.usuarioSesion;
+  document.getElementById('uNombre').textContent = _u ? _u.n : R.persona;
+  document.getElementById('uRol').textContent    = _u ? _u.rol : R.label;
+  /* El alcance también se arma del usuario: sus regiones reales y, para una
+     jefatura, el tamaño real de su plantilla. */
+  let _alc = R.alcance;
+  if(_u){
+    const regs=(_u.regiones||[]).join(', ');
+    if(_u.rol==='Jefatura de Recuperación'){
+      const nEq=DB.ejecutivos.filter(e=>{const x=DB.usuarios.find(y=>y.n===e.n);return x&&x.reportaA===_u.n;}).length;
+      _alc = `${nEq} ejecutivo${nEq===1?'':'s'}${regs?' · '+regs:''}`;
+    } else if(_u.rol==='Ejecutivo de Recuperación'){
+      _alc = `Cartera propia${regs?' · '+regs:''}`;
+    } else if(regs){ _alc = regs; }
+  }
+  document.getElementById('uAlcance').textContent=_alc;
   document.getElementById('topInfo').textContent='Prototipo integral · datos simulados · '+fecha(HOY);
   const noLeidas=currentRole==='ejecutivo'
     ? DB.notificaciones.filter(n=>!n.leida&&!n.rol).length
@@ -578,7 +592,7 @@ function go(k,arg){
 function renderLocked(k){
   document.getElementById('main').innerHTML=
     `<div class="locked"><div class="ic">🔒</div><b>Sin permiso para «${NAV[k]||k}»</b>
-     El perfil <b>${ROLES[currentRole].label}</b> no tiene acceso a este módulo.<br>
+     El perfil <b>${rolActual()}</b> no tiene acceso a este módulo.<br>
      El permiso se evalúa en la capa de datos, no ocultando el botón.</div>`;
 }
 function head(titulo,crumb,nota){
@@ -657,12 +671,21 @@ function cuentasDeFalcos(){
 function cartera(){
   const falcoCts = cuentasDeFalcos();
   if(currentRole==='ejecutivo'){
-    const propias = DB.cuentas.filter(c=>c.ejecutivo==='Felipe Ramírez' && c.estatus!=='Quebranto');
-    const miosFalcos = falcoCts.filter(f=>f.ejecutivo==='Felipe Ramírez');
+    /* PUNTO 2 — CAUSA RAÍZ: aquí estaba 'Felipe Ramírez' escrito a mano, así que
+       CUALQUIER ejecutivo que iniciara sesión veía y operaba la cartera de Felipe.
+       No era un problema de etiqueta: era acceso a datos de otra persona. */
+    const yo = personaActual();
+    const propias = DB.cuentas.filter(c=>c.ejecutivo===yo && c.estatus!=='Quebranto');
+    const miosFalcos = falcoCts.filter(f=>f.ejecutivo===yo);
     return [...propias, ...miosFalcos];
   }
-  if(currentRole==='jefatura'){ const p=ROLES.jefatura.persona; return [...DB.cuentas.filter(c=>c.jefatura===p), ...falcoCts.filter(f=>f.jefatura===p)]; }
-  if(currentRole==='comercial')    return DB.cuentas.filter(c=>c.region==='Jalisco');
+  if(currentRole==='jefatura'){ const p=personaActual(); return [...DB.cuentas.filter(c=>c.jefatura===p), ...falcoCts.filter(f=>f.jefatura===p)]; }
+  if(currentRole==='comercial'){
+    /* Igual que arriba: la región estaba fija en 'Jalisco'. Ahora se toma del
+       alcance autorizado del usuario en sesión. */
+    const regs=(window.usuarioSesion&&window.usuarioSesion.regiones)||[];
+    return regs.length ? DB.cuentas.filter(c=>regs.includes(c.region)) : DB.cuentas.filter(c=>c.region==='Jalisco');
+  }
   return [...DB.cuentas, ...falcoCts];
 }
 function diasRestantes(){
@@ -810,7 +833,7 @@ VIEWS.notifs=()=>{
 
 VIEWS.miDia=()=>{
   const cs=cartera();
-  const persona=ROLES[currentRole].persona;
+  const persona=personaActual();
   const totalAsignado = cs.reduce((s,c)=>s+c.adeudoAsig,0);
   const enGestion     = cs.reduce((s,c)=>s+c.saldoReal,0);
   const recuperado    = totalAsignado-enGestion;
@@ -1684,6 +1707,7 @@ VIEWS.misCatorcenas=()=>{
    ══════════════════════════════════════════════════════════════════ */
 
 function abrirDictaminacion(id){
+  window.adjDictamen=[];   // limpia adjuntos de una captura anterior
   const c=DB.cuentas.find(x=>x.id===id)||cuentasDeFalcos().find(x=>x.id===id);
   modal(`<h3>⚖️ Proponer dictaminación</h3>
     <div class="msub">${esc(c.cliente)} · ${c.id}</div>
@@ -1708,6 +1732,16 @@ function abrirDictaminacion(id){
         </label>`).join('')}
       </div>
     </fieldset>
+    <fieldset class="field"><legend>Adjuntar documentación de soporte
+        <span style="font-size:10px;color:var(--text3)">(imágenes o PDF · varios archivos)</span></legend>
+      <input type="file" id="dArchivos" multiple
+        accept=".png,.jpg,.jpeg,.webp,.pdf,image/png,image/jpeg,image/webp,application/pdf"
+        onchange="adjAgregar('dArchivos','adjDictamen','listaAdjDictamen',true)"
+        style="width:100%;padding:9px 12px;border:1.5px dashed var(--turql);border-radius:9px;
+               background:var(--tint);font-size:12px;cursor:pointer">
+      <div class="hint">Sube el respaldo del caso: acta, identificación, evidencia fotográfica o dictamen médico. Máx. 5 MB por archivo.</div>
+      <div id="listaAdjDictamen"></div>
+    </fieldset>
     <div class="note info"><b>Recuerda:</b> esta acción queda registrada en el expediente de la cuenta y en la bitácora del sistema. No puede deshacerse sin la intervención de Jefatura.</div>
     <div class="mfoot"><button class="act o" onclick="abrirGestion('${id}')">← Atrás</button>
       <button class="act i" onclick="guardarDictaminacion('${id}')">Proponer dictaminación</button></div>`,true);
@@ -1723,10 +1757,11 @@ function guardarDictaminacion(id){
   DB.dictaminaciones.push({
     id:'D-'+(DB.dictaminaciones.length+1).toString().padStart(3,'0'),
     cuentaId:id, cliente:c.cliente,
-    ejecutivo:ROLES[currentRole].persona,
+    ejecutivo:personaActual(),
     fecha:fecha(HOY), resolucion:'Propuesta de dictaminación',
     hallazgos:`Motivo: ${motivo}. ${hallazgos}`,
     documentos,
+    archivos:(window.adjDictamen||[]).slice(),   // punto 9: soporte adjunto
     estado:'PENDIENTE_VOBO',
     rechazadoPor:null, motivoRechazo:null
   });
@@ -1838,6 +1873,7 @@ function abrirGestion(id){
     <div class="mfoot"><button class="act o" onclick="closeModal()">Cancelar</button></div>`,true);
 }
 function gestionPaso2(id,tipo){
+  window.adjGestion=[];   // limpia adjuntos de una captura anterior
   const c=DB.cuentas.find(x=>x.id===id);
   const conMonto=['Pago total','Pago parcial','Promesa de pago','Convenio'].includes(tipo);
   const conFolio=['Pago total','Pago parcial'].includes(tipo);
@@ -1908,10 +1944,13 @@ function gestionPaso2(id,tipo){
       </span>
     </label>
     <div id="eviUpload" style="display:none;margin-top:8px">
-      <input type="file" id="gEviFile" accept="image/*,.pdf"
+      <input type="file" id="gEviFile" multiple
+        accept=".png,.jpg,.jpeg,.webp,.pdf,image/png,image/jpeg,image/webp,application/pdf"
+        onchange="adjAgregar('gEviFile','adjGestion','listaEviGestion',true)"
         style="width:100%;padding:9px 12px;border:1.5px dashed var(--turql);border-radius:9px;
                background:var(--tint);font-size:12px;cursor:pointer">
-      <div class="hint">Formatos: JPG, PNG, PDF · máx. 5 MB</div>
+      <div class="hint">Formatos: JPG, PNG, WEBP o PDF · máx. 5 MB por archivo · puedes adjuntar varios</div>
+      <div id="listaEviGestion"></div>
     </div>
     ${tipo==='Pago total'?`
     <div class="note" style="margin-top:14px;background:#EEF9F4;border-color:#A7F3D0;border-left-color:var(--green)">
@@ -1943,7 +1982,9 @@ function guardarGestion(id,tipo){
   }
   const folio=(document.getElementById('gFolio')||{}).value || 'REC-'+Math.floor(10000+Math.random()*89999);
   const contactoCon=(()=>{const r=document.querySelector('input[name="gContacto"]:checked');return r?r.value:null;})();
-  const g={id:'G-'+Math.floor(4500+Math.random()*400),cuentaId:id,ejecutivo:ROLES[currentRole].persona,
+  const _adj=(window.adjGestion||[]).slice();
+  const g={id:'G-'+Math.floor(4500+Math.random()*400),cuentaId:id,ejecutivo:personaActual(),
+    evidencias:_adj,
     fecha:fecha(HOY),tipo,monto:monto||undefined,folio:['Pago total','Pago parcial'].includes(tipo)?folio:undefined,
     compromiso:(document.getElementById('gFecha')||{}).value||undefined,
     motivo:(document.getElementById('gMotivo')||{}).value||undefined,
@@ -1967,9 +2008,11 @@ function guardarGestion(id,tipo){
     } else {
       c.paso=Math.max(c.paso,4);
     }
-    const ej=DB.ejecutivos.find(x=>x.n===ROLES[currentRole].persona); if(ej) ej.recuperado+=monto;
-    const jef=DB.jefaturas.find(x=>x.n==='Carmen Vega'); if(jef) jef.recuperado+=monto;
-    const pais=DB.paises.find(x=>x.p==='México'); if(pais) pais.recuperado+=monto;
+    /* El recuperado se acumula al ejecutivo que registró el pago. Los agregados
+       de jefatura y país ya NO se tocan: se derivan de la suma del equipo
+       (reglas R-03 y R-04). Antes se sumaba a 'Carmen Vega' fija, lo que
+       inflaba su cifra aunque el pago fuera de otro equipo. */
+    const ej=DB.ejecutivos.find(x=>x.n===personaActual()); if(ej) ej.recuperado+=monto;
   }
   if(tipo==='Promesa de pago'){c.estatus='Con promesa vigente'; c.paso=Math.max(c.paso,4);}
   if(tipo==='Convenio'){c.estatus='Convenio activo'; c.paso=Math.max(c.paso,4);}
@@ -2050,6 +2093,113 @@ const claseLogro   = l => l>=uObjetivo()?'green'          :l>=uRiesgo()?'amber' 
 const pillLogro    = l => l>=uObjetivo()?'g'              :l>=uRiesgo()?'m'              :'a';
 const emojiLogro   = l => l>=uObjetivo()?'🟢'             :l>=uRiesgo()?'🟡'             :'🔴';
 
+/* ═══ IDENTIDAD DEL USUARIO EN SESIÓN ══════════════════════════════════
+   PROBLEMA CORREGIDO: la identidad se tomaba de personaActual(),
+   es decir del ROL y no del usuario autenticado. Consecuencia: cualquier
+   ejecutivo que iniciara sesión aparecía y OPERABA como Felipe Ramírez —
+   veía su cartera, y sus gestiones se registraban a nombre de él.
+   No era una etiqueta mal puesta: era un problema de alcance de datos.
+   personaActual() es ahora la única fuente de identidad. */
+/* ═══ ADJUNTOS ════════════════════════════════════════════════════════════
+   PROBLEMA CORREGIDO (punto 1): el checkbox de evidencia llamaba a
+   toggleEviUpload(), que NUNCA existió: el panel jamás se mostraba y el
+   archivo no se leía al guardar. Aquí está el módulo completo, reutilizado
+   también por las dictaminaciones (punto 9), que admiten varios archivos.
+
+   NOTA DE ARQUITECTURA: sin servidor, los archivos se guardan como data URL
+   en memoria y se pierden al cerrar. En producción van a object storage y la
+   base sólo guarda metadata + hash (ver tabla `evidencia` del DDL). */
+const ADJ_TIPOS_OK = ['image/png','image/jpeg','image/jpg','image/webp','application/pdf'];
+const ADJ_EXT_TXT  = 'JPG, PNG, WEBP o PDF';
+const ADJ_MAX_MB   = 5;
+
+function adjValidar(f){
+  const tipoOk = ADJ_TIPOS_OK.includes((f.type||'').toLowerCase())
+              || /\.(png|jpe?g|webp|pdf)$/i.test(f.name||'');
+  if(!tipoOk) return `«${f.name}» no es un formato permitido. Se aceptan ${ADJ_EXT_TXT}.`;
+  if(f.size > ADJ_MAX_MB*1024*1024)
+    return `«${f.name}» pesa ${(f.size/1048576).toFixed(1)} MB y el máximo es ${ADJ_MAX_MB} MB.`;
+  return null;
+}
+const adjLeer = f => new Promise((res,rej)=>{
+  const r=new FileReader();
+  r.onload  = ()=>res({nombre:f.name, tipo:f.type||'', tamano:f.size, url:r.result});
+  r.onerror = ()=>rej(new Error('No se pudo leer '+f.name));
+  r.readAsDataURL(f);
+});
+const adjKb = b => b<1024 ? b+' B' : (b<1048576 ? (b/1024).toFixed(0)+' KB' : (b/1048576).toFixed(1)+' MB');
+const adjEsImagen = a => /^image\//.test(a.tipo) || /\.(png|jpe?g|webp)$/i.test(a.nombre);
+
+/* Muestra u oculta el panel de carga de evidencia en el formulario de gestión. */
+function toggleEviUpload(on){
+  const box=document.getElementById('eviUpload');
+  if(box) box.style.display = on ? 'block' : 'none';
+  if(!on){
+    window.adjGestion=[];
+    const inp=document.getElementById('gEviFile'); if(inp) inp.value='';
+    pintarAdjuntos('listaEviGestion','adjGestion');
+  }
+}
+
+/* Agrega archivos a una lista en memoria, validando cada uno. */
+async function adjAgregar(inputId, almacen, contenedorId, multiple){
+  const inp=document.getElementById(inputId);
+  if(!inp || !inp.files || !inp.files.length) return;
+  if(!Array.isArray(window[almacen])) window[almacen]=[];
+  const errores=[];
+  for(const f of Array.from(inp.files)){
+    const e=adjValidar(f);
+    if(e){ errores.push(e); continue; }
+    if(!multiple) window[almacen]=[];
+    if(window[almacen].some(a=>a.nombre===f.name && a.tamano===f.size)){
+      errores.push(`«${f.name}» ya estaba adjunto.`); continue;
+    }
+    try{ window[almacen].push(await adjLeer(f)); }
+    catch(err){ errores.push(err.message); }
+  }
+  inp.value='';
+  pintarAdjuntos(contenedorId, almacen);
+  if(errores.length) toast(errores[0],'bad');
+  else if(window[almacen].length) toast(`${window[almacen].length} archivo${window[almacen].length===1?'':'s'} adjunto${window[almacen].length===1?'':'s'}.`,'ok');
+}
+function adjQuitar(almacen, i, contenedorId){
+  if(Array.isArray(window[almacen])) window[almacen].splice(i,1);
+  pintarAdjuntos(contenedorId, almacen);
+}
+function pintarAdjuntos(contenedorId, almacen){
+  const cont=document.getElementById(contenedorId);
+  if(!cont) return;
+  const arr=window[almacen]||[];
+  if(!arr.length){ cont.innerHTML=''; return; }
+  cont.innerHTML=`<div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+    ${arr.map((a,i)=>`<div style="display:flex;align-items:center;gap:9px;padding:7px 10px;
+        border:1px solid var(--line);border-radius:9px;background:#fff">
+      ${adjEsImagen(a)
+        ? `<img src="${a.url}" alt="" style="width:34px;height:34px;object-fit:cover;border-radius:6px;flex:0 0 auto">`
+        : `<span style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+              background:var(--tint);border-radius:6px;font-size:15px;flex:0 0 auto">📄</span>`}
+      <span style="flex:1;min-width:0">
+        <span style="display:block;font-size:12px;font-weight:600;color:var(--indigo);
+              overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a.nombre)}</span>
+        <span style="font-size:10.5px;color:var(--text3)">${adjKb(a.tamano)}</span>
+      </span>
+      <button type="button" class="act sm o" style="padding:3px 8px;font-size:11px"
+        onclick="adjQuitar('${almacen}',${i},'${contenedorId}')" aria-label="Quitar ${esc(a.nombre)}">✕</button>
+    </div>`).join('')}
+  </div>`;
+}
+
+function personaActual(){
+  if(window.usuarioSesion && window.usuarioSesion.n) return window.usuarioSesion.n;
+  const R=ROLES[currentRole];                       // respaldo en modo demo
+  return R ? R.persona : '';
+}
+function rolActual(){
+  if(window.usuarioSesion && window.usuarioSesion.rol) return window.usuarioSesion.rol;
+  const R=ROLES[currentRole];
+  return R ? R.label : '';
+}
+
 const cuentasReales = nombreEj => DB.cuentas.filter(c=>c.ejecutivo===nombreEj).length;
 
 /* A-07/A-09: alcance autorizado de un ejecutivo. Una cuenta o FALCO NO puede asignarse
@@ -2123,7 +2273,7 @@ function agregadoJefatura(nombreJefatura){
 }
 
 const equipo=()=>{
-  const persona=ROLES[currentRole]?.persona;
+  const persona=personaActual();
   return DB.ejecutivos
     .filter(e=>{
       const u=DB.usuarios.find(x=>x.n===e.n);
@@ -2217,7 +2367,7 @@ VIEWS.agendaEquipo=()=>{
 
   // Ejecutivos reales de la jefatura en sesión (vía reportaA — antes estaba fijo a 'Carmen Vega'
   // sin importar quién iniciara sesión, y mezclaba ejecutivos de otras jefaturas)
-  const personaJef=ROLES[currentRole]?.persona;
+  const personaJef=personaActual();
   const todosEjs=DB.ejecutivos.filter(e=>{
     const u=DB.usuarios.find(x=>x.n===e.n);
     return u ? u.reportaA===personaJef : true;
@@ -2381,7 +2531,7 @@ VIEWS.agendaEquipo=()=>{
 
 
 VIEWS.tabJefe=()=>{
-  const persona=ROLES.jefatura.persona;
+  const persona=personaActual();
   if(typeof window.tjFiltroEj==='undefined') window.tjFiltroEj='';
   if(typeof window.tjFiltroMarca==='undefined') window.tjFiltroMarca='';
   if(typeof window.tjFiltroRegion==='undefined') window.tjFiltroRegion='';
@@ -3003,7 +3153,11 @@ VIEWS.carteraEquipo=()=>{
                         ${tabla(['Cuenta','Cliente','Marca','Saldo','Días','Gestiones','Estatus',''],
                           cts.slice().sort((a,b)=>b.diasVenc-a.diasVenc).map(c=>{
                             const nG=nGest(c.id);
-                            const valBtn=nG>0&&!tieneVisitaValidada(c.id)
+                            /* Punto 3: en "Liquidado pendiente Core" el pago ya se aplicó
+                               y sólo falta la confirmación del Core. Validar la visita ahí
+                               no aporta nada y confundía, así que el botón no se muestra. */
+                            const _sinValidacion=['Liquidado pendiente Core','Liquidado','Quebranto'].includes(c.estatus);
+                            const valBtn=nG>0&&!tieneVisitaValidada(c.id)&&!_sinValidacion
                               ?`<button class="act sm" style="background:var(--green);font-size:10.5px;padding:5px 9px" onclick="validarVisita('${c.id}','${esc(c.cliente).replace(/'/g,"\\'")}')">✓ Validar</button>`:'';
                             return [
                               (c.esFalco?'<span class="pill m" style="font-size:8.5px;padding:2px 6px;margin-right:4px">FALCO</span>':'')+`<b>${c.id}</b>`,
@@ -3196,7 +3350,7 @@ function confirmarAprobacionGerencia(id){
   const obs=(document.getElementById('gAprobObs')||{}).value||'';
   const estadoAnterior=d.estado;
   d.estado='VOBO_GERENCIA';
-  d.aprobadoPor=ROLES[currentRole].persona;
+  d.aprobadoPor=personaActual();
   d.fechaResolucionFinal=fecha(HOY);
   const cu=DB.cuentas.find(x=>x.id===d.cuentaId);
   if(cu){ cu.estatus='Quebranto'; cu.paso=7; }
@@ -3226,7 +3380,7 @@ function confirmarRechazoDictamenGerencia(id){
   const mot=causa+(detalle.trim()?' — '+detalle.trim():'');
   const d=DB.dictaminaciones.find(x=>x.id===id);
   const estadoAnterior=d.estado;
-  d.estado='RECHAZADA_GERENCIA'; d.rechazadoPor=ROLES[currentRole].persona; d.motivoRechazo=mot;
+  d.estado='RECHAZADA_GERENCIA'; d.rechazadoPor=personaActual(); d.motivoRechazo=mot;
   const cu=DB.cuentas.find(x=>x.id===d.cuentaId);
   if(cu&&cu.estatus==='Dictaminación propuesta') cu.estatus='En gestión';
   log('Rechazo final de dictaminación',`${d.id} · ${d.cliente}`,mot,estadoAnterior,'RECHAZADA_GERENCIA');
@@ -3288,7 +3442,22 @@ function filtrarCuentasManual(q){
   });
 }
 function asignarGrupo(){
-  const grupos=[...new Set(DB.cuentas.filter(c=>c.estatus!=='Liquidado').map(c=>c.grupo))].filter(Boolean).sort();
+  /* Punto 4: listaba TODOS los grupos del sistema, incluidos los de otras
+     jefaturas — que además la restricción de región impide asignar, así que
+     el módulo se veía inconsistente. Ahora sólo muestra los grupos del
+     alcance real de la jefatura: los de su plantilla o de sus regiones. */
+  const _eq=new Set(equipo().map(e=>e.n));
+  const _regs=new Set((window.usuarioSesion&&window.usuarioSesion.regiones)||[]);
+  const _enAlcance=c=>_eq.has(c.ejecutivo) || (_regs.size? _regs.has(c.region) : true);
+  const _ctasAlcance=DB.cuentas.filter(c=>c.estatus!=='Liquidado'&&c.estatus!=='Quebranto'&&_enAlcance(c));
+  const grupos=[...new Set(_ctasAlcance.map(c=>c.grupo))].filter(Boolean).sort();
+  if(!grupos.length){
+    modal(`<h3>Asignación por grupo</h3>
+      <div class="note warn">No hay grupos disponibles en tu alcance. Los grupos se listan cuando
+      tienen cuentas activas asignadas a tu equipo o en las regiones que tienes autorizadas.</div>
+      <div class="mfoot"><button class="act o" onclick="closeModal()">Cerrar</button></div>`);
+    return;
+  }
   modal(`<h3>Asignación por grupo</h3><div class="msub">El grupo solidario completo se traslada a un solo ejecutivo — se respeta la integridad del grupo.</div>
     <div class="field"><label for="aGrupoBusq">Buscar grupo</label>
       <input id="aGrupoBusq" type="search" placeholder="Nombre del grupo o líder…"
@@ -3296,7 +3465,7 @@ function asignarGrupo(){
         oninput="filtrarGrupos(this.value)">
       <div id="aGrupoLista" style="max-height:200px;overflow-y:auto;border:1px solid var(--line);border-radius:8px">
         ${grupos.map((g,i)=>{
-          const cs=DB.cuentas.filter(c=>c.grupo===g);
+          const cs=_ctasAlcance.filter(c=>c.grupo===g);
           const lider=cs[0]?.lider||'—', ej=cs[0]?.ejecutivo||'—', ruta=cs[0]?.ruta||'—';
           return `<label style="display:flex;align-items:center;gap:10px;padding:9px 12px;
                    border-bottom:1px solid var(--line2);cursor:pointer"
@@ -3493,7 +3662,7 @@ VIEWS.falcoAsig=()=>{
   const falcoRow=f=>[
     `<b>${f.id}</b>`,esc(f.lider),`${esc(f.grupo)} · ${f.ruta}`,esc(f.motivo),
     f.nCli,fmt(f.adeudo),
-    `<span class="pill ${f.categoriaLider==='Riesgo alto'?'a':f.categoriaLider==='En observación'?'m':'g'}">${f.categoriaLider||'—'}</span>`,
+    `<span class="pill n">${esc(f.categoriaLider||'Sin categorizar')}</span>`,
     `<span class="pill ${f.estatus==='ESCALADO'?'a':f.estatus==='RECUPERADO'?'g':f.estatus==='EN_GESTION'?'m':'n'}">${labelEstatusFalco(f.estatus)}</span>`,
     f.ejec?esc(f.ejec):'<span class="pill n">Sin asignar</span>',
     (()=>{
@@ -3557,7 +3726,7 @@ function asignarFalco(fid){
     <div class="msub">${esc(f.grupo)} · ${esc(f.region)}</div>
     <dl class="dl">
       <dt>Líder</dt><dd><b>${esc(f.lider)}</b></dd>
-      <dt>Categoría</dt><dd><span class="pill ${f.categoriaLider==='Riesgo alto'?'a':f.categoriaLider==='En observación'?'m':'g'}">${f.categoriaLider||'—'}</span></dd>
+      <dt>Categoría</dt><dd><span class="pill n">${esc(f.categoriaLider||'Sin categorizar')}</span></dd>
       <dt>Domicilio</dt><dd>${esc(f.domicilioLider||'No capturado')}</dd>
       <dt>Geolocalización</dt><dd>${f.lat?`<a href="https://www.google.com/maps?q=${f.lat},${f.lon}" target="_blank" rel="noopener">${f.lat}, ${f.lon}</a>`:'No capturada'}</dd>
       <dt>Teléfono ruta</dt><dd>${esc(f.tel)}</dd>
@@ -3815,7 +3984,7 @@ if(typeof window.cgFiltroQ==='undefined')   window.cgFiltroQ='';
 VIEWS.carterasGer=()=>{
   /* A-01: alcance = jefaturas cuyo jefe directo es la gerencia en sesión y que
      tienen al menos un ejecutivo con cartera. */
-  const _ger=ROLES[currentRole]?.persona;
+  const _ger=personaActual();
   const _enAlcance=new Set(jefaturasDeGerencia(_ger).map(j=>j.n));
   const js=jefaturasCalc().filter(j=>_enAlcance.has(j.n));
   const fJef=window.cgFiltroJef||'', fEj=window.cgFiltroEj||'';
@@ -4050,7 +4219,7 @@ VIEWS.dictGer=()=>{
    Función única reutilizada por ambos roles.
    ═══════════════════════════════════════════════════════════════════════ */
 function renderTabGerDir(rolLabel){
-  const _gerPersona = ROLES[currentRole]?.persona;
+  const _gerPersona = personaActual();
   const _alcanceJef = new Set(jefaturasDeGerencia(currentRole==='director'?ROLES.gerencia.persona:_gerPersona).map(j=>j.n));
   const JS        = jefaturasCalc().filter(j=>_alcanceJef.has(j.n));  // A-01: solo jefaturas de su alcance
   /* Selector de jefatura: orden alfabético estable, independiente del desempeño del día.
@@ -4780,6 +4949,9 @@ VIEWS.falcoForm=()=>head('Reportar Faltante (FALCO)','Comercial · captura de ca
         <div class="field"><label for="nfRuta">Ruta</label><input id="nfRuta" placeholder="Ej. R-04"></div>
         <div class="field"><label for="nfReg">Región</label><select id="nfReg"><option>Jalisco</option><option>Nayarit</option><option>Colima</option></select></div>
         <div class="field"><label for="nfMot">Motivo</label><select id="nfMot">${CATALOGOS.MOTIVO_FALCO.map(m=>`<option>${m}</option>`).join('')}</select></div>
+        <div class="field"><label for="nfCat">Categoría del líder</label>
+          <input id="nfCat" placeholder="Describe con tus palabras el perfil o antecedente del líder" maxlength="120">
+          <div class="hint">Campo abierto: lo captura quien reporta, no se elige de una lista.</div></div>
       </div>
       <div class="panel"><h3>Alcance e impacto</h3>
         <div class="field"><label for="nfMonto">Monto involucrado</label><input type="number" id="nfMonto" placeholder="0"></div>
@@ -4795,7 +4967,8 @@ function enviarFalco(){
   if(!g('nfLider').trim()||!g('nfGrupo').trim()||!g('nfMonto')){toast('Captura líder, grupo y monto.','bad');return;}
   const f={id:'F-'+Math.floor(2210+Math.random()*80),lider:g('nfLider'),grupo:g('nfGrupo'),ruta:g('nfRuta')||'—',
     region:g('nfReg'),motivo:g('nfMot'),fecha:fecha(HOY),tel:g('nfTel')||'—',
-    adeudo:Number(g('nfMonto')),nCli:Number(g('nfCli'))||0,estatus:'RECIBIDO',repPor:ROLES[currentRole].persona+' (Comercial)',ejec:null};
+    categoriaLider:g('nfCat').trim()||'Sin categorizar',   // punto 5: texto libre del Jefe Comercial
+    adeudo:Number(g('nfMonto')),nCli:Number(g('nfCli'))||0,estatus:'RECIBIDO',repPor:personaActual()+' (Comercial)',ejec:null};
   DB.falcos.unshift(f);
   log('Reporte de FALCO',`${f.id} · ${f.lider} · ${f.grupo} · ${fmt(f.adeudo)}`,g('nfDesc'),null,'RECIBIDO');
   toast(`Reporte ${f.id} enviado. Cambia a Jefatura para verlo en la bandeja de asignación.`,'ok');
@@ -4804,7 +4977,7 @@ function enviarFalco(){
 
 VIEWS.consultaCom=()=>{
   // Solo los FALCOs reportados por este usuario comercial
-  const persona=ROLES[currentRole]?.persona||'';
+  const persona=personaActual()||'';
   const misFalcos=DB.falcos.filter(f=>f.repPor&&f.repPor.includes(persona.split(' ')[0]));
   // Para cada FALCO, obtener la cuenta asociada al grupo del FALCO
   const cuentasIds=new Set(misFalcos.map(f=>f.grupo));
@@ -4865,18 +5038,7 @@ VIEWS.usuarios=()=>{
     if(u.intentosFallidos>=3) alertas.push({tipo:'critica',icon:'🔐',
       msg:`${esc(u.n)} — ${u.intentosFallidos} intentos fallidos de acceso`,
       accion:`Bloquear cuenta`,onclick:`bloquearAlerta(${i})`});
-    // MFA es opcional — no se genera alerta por falta de MFA
-    if(u.passVence){
-      const partes=u.passVence.split('-');
-      const vence=new Date(`20${partes[2]}-${{'ene':'01','feb':'02','mar':'03','abr':'04','may':'05','jun':'06','jul':'07','ago':'08','sep':'09','oct':'10','nov':'11','dic':'12'}[partes[1]]}-${partes[0]}`);
-      const diasRestantes=Math.round((vence-hoy)/86400000);
-      if(diasRestantes<=30&&diasRestantes>=0&&u.estatus==='Activo') alertas.push({tipo:'warn',icon:'⏳',
-        msg:`${esc(u.n)} — Contraseña vence en ${diasRestantes} días (${u.passVence})`,
-        accion:'Notificar',onclick:`toast('Notificación enviada a ${esc(u.c)}','ok')`});
-      if(diasRestantes<0&&u.estatus==='Activo') alertas.push({tipo:'critica',icon:'⛔',
-        msg:`${esc(u.n)} — Contraseña vencida hace ${Math.abs(diasRestantes)} días`,
-        accion:'Forzar cambio',onclick:`toast('Se forzará cambio de contraseña en el próximo ingreso.','ok')`});
-    }
+    /* Punto 7: sin política de vencimiento, no hay alertas de caducidad. */
   });
 
   // Sesiones activas
@@ -4955,16 +5117,9 @@ VIEWS.usuarios=()=>{
       ${lista.map((u,_i)=>{
         const i=DB.usuarios.indexOf(u);
         const activo=u.estatus==='Activo';
-        const riesgoMfa=!u.mfa&&activo;
         const riesgoIntentos=u.intentosFallidos>=3;
         // Días para vencimiento de contraseña
         let diasPass=null;
-        if(u.passVence){
-          const pp=u.passVence.split('-');
-          const mMap={'ene':'01','feb':'02','mar':'03','abr':'04','may':'05','jun':'06','jul':'07','ago':'08','sep':'09','oct':'10','nov':'11','dic':'12'};
-          const vf=new Date(`20${pp[2]}-${mMap[pp[1]]}-${pp[0]}`);
-          diasPass=Math.round((vf-hoy)/86400000);
-        }
         const passColor=diasPass===null?'var(--text3)':diasPass<0?'var(--red)':diasPass<=30?'var(--amber)':'var(--green)';
         const passLabel=diasPass===null?'—':diasPass<0?`Vencida (${Math.abs(diasPass)}d)`:diasPass<=30?`Vence en ${diasPass}d`:`OK (${diasPass}d)`;
         const iniciales=u.n.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
@@ -4972,7 +5127,7 @@ VIEWS.usuarios=()=>{
           'Gerencia de Recuperación':'var(--indigo)','Director de Unidad de Negocio':'#7C3AED',
           'Jefatura Comercial':'#EA580C','Administrador de Seguridad':'var(--red)',
           'Administrador de Configuración':'var(--amber)','Especialista de Información y Control':'var(--green)'}[u.rol]||'var(--indigo)';
-        return `<div style="background:var(--surface);border:1.5px solid ${riesgoIntentos?'var(--red)':riesgoMfa?'var(--amber)':'var(--line)'};
+        return `<div style="background:var(--surface);border:1.5px solid ${riesgoIntentos?'var(--red)':'var(--line)'};
                      border-radius:12px;padding:14px 18px;display:grid;
                      grid-template-columns:52px 1fr auto;gap:14px;align-items:center">
           <!-- Avatar -->
@@ -4984,7 +5139,6 @@ VIEWS.usuarios=()=>{
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px">
               <span style="font-size:14px;font-weight:800;color:${activo?'var(--indigo)':'var(--text3)'}">${esc(u.n)}</span>
               <span class="pill ${activo?'g':'a'}" style="font-size:9.5px">${u.estatus}</span>
-              ${u.mfa?'<span class="pill g" style="font-size:9px;background:rgba(30,142,90,.12);color:#166534">🛡 MFA</span>':'<span class="pill a" style="font-size:9px">⚠ Sin MFA</span>'}
               ${u.sesionesActivas>0?`<span class="pill b" style="font-size:9px">● ${u.sesionesActivas} sesión activa</span>`:''}
               ${u.intentosFallidos>=3?`<span class="pill a" style="font-size:9px">🔐 ${u.intentosFallidos} intentos fallidos</span>`:''}
             </div>
@@ -5092,8 +5246,6 @@ function nuevoUsuario(){
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px">
       <div class="field"><label for="uP">País / Unidad de Negocio</label>
         <select id="uP">${(CATALOGOS.PAISES_ACTIVOS||[]).map(pz=>`<option>${pz}</option>`).join('')}<option>Global</option></select></div>
-      <div class="field"><label for="uMFA">MFA</label>
-        <select id="uMFA"><option value="true">✅ Activado (recomendado)</option><option value="false">⚠️ No activado (justificar)</option></select></div>
     </div>
 
     <!-- Marcas asignadas (visible para Ejecutivo y Jefatura) -->
@@ -5145,14 +5297,12 @@ function guardarUsuario(){
   const hoy=HOY;
   const mv={'01':'ene','02':'feb','03':'mar','04':'abr','05':'may','06':'jun','07':'jul','08':'ago','09':'sep','10':'oct','11':'nov','12':'dic'};
   const d7=new Date(hoy); d7.setDate(d7.getDate()+7);
-  const passVence=`${String(d7.getDate()).padStart(2,'0')}-${mv[String(d7.getMonth()+1).padStart(2,'0')]}-${String(d7.getFullYear()).slice(2)}`;
   const altaFmt=`${String(hoy.getDate()).padStart(2,'0')}-${mv[String(hoy.getMonth()+1).padStart(2,'0')]}-${String(hoy.getFullYear()).slice(2)}`;
   const nuevo={n:v('uN'),c:v('uC'),rol:v('uR'),pais:v('uP')||'México',
     unidadNegocio:v('uP')||'México', reportaA:v('uJefe')||null,
     marcas,regiones,
     estatus:'Activo',ultimo:'Sin ingresos',alta:altaFmt,
-    intentosFallidos:0,mfa:v('uMFA')==='true',
-    passVence,sesionesActivas:0,primerIngreso:true};
+    intentosFallidos:0,sesionesActivas:0,primerIngreso:true};
   DB.usuarios.push(nuevo);
   log('Alta de usuario',`${v('uN')} · ${v('uR')} · ${v('uP')} · Reporta a: ${v('uJefe')||'N/A'}`,v('uM'),null,'Activo');
   closeModal();
@@ -5178,8 +5328,6 @@ function editarUsuario(i){
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px">
       <div class="field"><label for="uP2">País / Unidad de Negocio</label>
         <select id="uP2">${(CATALOGOS.PAISES_ACTIVOS||[]).map(pz=>`<option ${(u.pais||'')===pz?'selected':''}>${pz}</option>`).join('')}<option ${(u.pais||'')==='Global'?'selected':''}>Global</option></select></div>
-      <div class="field"><label for="uMFA2">MFA</label>
-        <select id="uMFA2"><option value="true" ${u.mfa?'selected':''}>✅ Activado</option><option value="false" ${!u.mfa?'selected':''}>⚠️ Desactivado</option></select></div>
     </div>
 
     <fieldset class="field"><legend>Marcas que gestiona</legend>
@@ -5229,11 +5377,11 @@ function editarUsuario(i){
 function aplicarUsuario(i){
   const u=DB.usuarios[i]; const v=id=>(document.getElementById(id)||{}).value||'';
   if(!v('uM2').trim()){toast('El motivo del cambio es obligatorio.','bad');return;}
-  const antes=`Perfil: ${u.rol} | País: ${u.pais||'—'} | Reporta: ${u.reportaA||'N/A'} | MFA: ${u.mfa?'Sí':'No'} | Marcas: ${(u.marcas||[]).join(',')||'—'} | Regiones: ${(u.regiones||[]).join(',')||'—'}`;
+  const antes=`Perfil: ${u.rol} | País: ${u.pais||'—'} | Reporta: ${u.reportaA||'N/A'} | Marcas: ${(u.marcas||[]).join(',')||'—'} | Regiones: ${(u.regiones||[]).join(',')||'—'}`;
   const nuevasMarcas=[...document.querySelectorAll('input[name="uMarca2"]:checked')].map(c=>c.value);
   const nuevasRegiones=[...document.querySelectorAll('input[name="uRegion2"]:checked')].map(c=>c.value);
   u.rol=v('uR2'); u.pais=v('uP2'); u.unidadNegocio=v('uP2');
-  u.reportaA=v('uJefe2')||null; u.mfa=v('uMFA2')==='true';
+  u.reportaA=v('uJefe2')||null;
   u.marcas=nuevasMarcas; u.regiones=nuevasRegiones;
   // Procesar cambio de contraseña si se ingresó
   const passNew=(document.getElementById('uPassNew')||{}).value||'';
@@ -5245,10 +5393,9 @@ function aplicarUsuario(i){
     if(passNew!==passNew2){toast('Las contraseñas no coinciden.','bad');return;}
     const mv={'01':'ene','02':'feb','03':'mar','04':'abr','05':'may','06':'jun','07':'jul','08':'ago','09':'sep','10':'oct','11':'nov','12':'dic'};
     const vf=new Date(HOY); vf.setDate(vf.getDate()+90);
-    u.passVence=`${String(vf.getDate()).padStart(2,'0')}-${mv[String(vf.getMonth()+1).padStart(2,'0')]}-${String(vf.getFullYear()).slice(2)}`;
   }
-  if(v('uFC')==='si') u.passVence='FORZAR_CAMBIO';
-  const despues=`Perfil: ${u.rol} | País: ${u.pais} | Reporta: ${u.reportaA||'N/A'} | MFA: ${u.mfa?'Sí':'No'} | Marcas: ${u.marcas.join(',')||'—'} | Regiones: ${u.regiones.join(',')||'—'}`;
+  /* Punto 7: sin política de vencimiento. */
+  const despues=`Perfil: ${u.rol} | País: ${u.pais} | Reporta: ${u.reportaA||'N/A'} | Marcas: ${u.marcas.join(',')||'—'} | Regiones: ${u.regiones.join(',')||'—'}`;
   log('Modificación de usuario',esc(u.n),v('uM2'),antes,despues);
   closeModal(); toast('Cambios aplicados y registrados en bitácora.','ok'); go('usuarios');
 }
@@ -5282,7 +5429,6 @@ function toggleUsuario(i){
           if(!m.trim()){toast('El motivo es obligatorio.','bad');return;}
           DB.usuarios[${i}].estatus='Activo';
           DB.usuarios[${i}].intentosFallidos=0;
-          if((document.getElementById('tFC')||{}).value==='si') DB.usuarios[${i}].passVence='FORZAR_CAMBIO';
           log('Reactivación de usuario',esc(DB.usuarios[${i}].n),m,'Bloqueado','Activo');
           closeModal();toast('${esc(u.n)} reactivado. Registrado en bitácora.','ok');go('usuarios');">
           Confirmar reactivación
@@ -5440,9 +5586,8 @@ VIEWS.matriz=()=>{
           {ic:'🚫',t:'Separación de deberes',d:'Ningún perfil concentra operación y su propia administración. Quien gestiona cartera no cambia parámetros; quien autoriza no registra la gestión que autoriza.'},
           {ic:'👁',t:'Mínimo privilegio',d:'Cada perfil accede únicamente a lo que su función requiere. El acceso adicional requiere autorización explícita de Dirección General.'},
           {ic:'📋',t:'Bitácora inmutable',d:'Todo cambio de permiso, bloqueo o alta de usuario queda registrado con actor, motivo, valor anterior y posterior. No se puede modificar.'},
-          {ic:'🔑',t:'Autenticación MFA',d:'MFA es una recomendación visible en cada usuario (insignia "Sin MFA"), especialmente para perfiles con acceso a datos sensibles. No es obligatoria ni bloquea el acceso, y su ausencia ya no genera una alerta de seguridad.'},
-          {ic:'⏰',t:'Vencimiento de credenciales',d:'Las contraseñas vencen cada 90 días. Las cuentas inactivas por más de 30 días se bloquean automáticamente.'},
-          {ic:'🌐',t:'Control por IP',d:'Los accesos desde IPs no registradas generan alerta. Los ejecutivos de campo operan desde IPs móviles monitoreadas por rango.'},
+          {ic:'🔒',t:'Bloqueo por intentos fallidos',d:`Tras ${P('MAX_INTENTOS_FALLIDOS')} intentos fallidos consecutivos la cuenta se bloquea automáticamente y sólo el Administrador de Seguridad puede reactivarla.`},
+          {ic:'📋',t:'Motivo obligatorio',d:'Toda alta, baja, bloqueo o cambio de permisos exige un motivo escrito que queda en la bitácora junto al valor anterior y el nuevo.'},
         ].map(p=>`
           <div style="padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface)">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
@@ -5713,7 +5858,6 @@ VIEWS.catalogos=()=>{
     MOTIVO_FALCO:        {desc:'Causas por las que el área comercial puede reportar un FALCO',      editable:true,  critico:false},
     MOTIVO_DICTAMINACION:{desc:'Categorías de cierre de cuenta en el proceso de dictaminación',     editable:false, critico:true},
     DESC_DICTAMINACION:  {desc:'Descripciones de los motivos de dictaminación (no es lista)',       editable:false, critico:true},
-    CATEGORIA_LIDER:     {desc:'Clasificación de riesgo del líder de grupo solidario',              editable:true,  critico:false},
     MOTIVO_NO_PAGO:      {desc:'Motivo de no pago o causa de mora que el ejecutivo captura al gestionar la cuenta en campo', editable:true,  critico:false},
     ETAPAS:              {desc:'Etapas del ciclo de vida de una cuenta en mora',                    editable:false, critico:true},
     PAISES_ACTIVOS:      {desc:'País que opera esta instancia del sistema (una instancia = un país, igual que la moneda)',      editable:false,  critico:true},
@@ -6178,13 +6322,7 @@ async function doLogin(){
     return;
   }
 
-  /* Contraseña correcta. Política de vencimiento a 90 días. */
-  const dv=diasHasta(usuario.passVence);
-  if(dv!==null && dv<0){
-    mostrarError(`Tu contraseña venció hace ${Math.abs(dv)} días (${usuario.passVence}). Contacta al Administrador de Seguridad para restablecerla.`);
-    log('Intento de acceso fallido', `${usuario.n} — contraseña vencida`, `Venció el ${usuario.passVence}`, '—', 'Rechazado');
-    return;
-  }
+  /* Punto 7: las contraseñas no vencen. Política de expiración eliminada. */
 
   const rolEncontrado=Object.keys(ROLES).find(k=>ROLES[k].persona===usuario.n)
                    || Object.keys(ROLES).find(k=>ROLES[k].label===usuario.rol);
@@ -6200,7 +6338,6 @@ async function doLogin(){
   window.usuarioSesion=usuario;
   log('Acceso al sistema', `${usuario.n} · ${usuario.rol}`, 'Ingreso con credenciales válidas', '—', 'Sesión iniciada');
 
-  if(dv!==null && dv<=10) toast(`Tu contraseña vence en ${dv} día${dv===1?'':'s'}. Solicita el cambio al Administrador de Seguridad.`,'bad');
   ingresarComo(rolEncontrado);
 }
 
